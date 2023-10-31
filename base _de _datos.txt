@@ -1,0 +1,5 @@
+usuario:   usrcafeteria
+
+contraseña:  6543210
+
+base de datos:   LabCafeteria_G4
