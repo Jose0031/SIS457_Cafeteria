@@ -14,13 +14,16 @@ GO
 ALTER ROLE db_owmer ADD MEMBER usrcafeteria
 GO
 
+DROP TABLE VentaDetalle;
 DROP TABLE Producto;
 DROP TABLE Categoria;
+DROP TABLE Venta;
 DROP TABLE Usuario;
 DROP TABLE Empleado;
+DROP TABLE Cliente;
 
 CREATE TABLE Empleado(
-  id_Empleado INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+  idEmpleado INT NOT NULL PRIMARY KEY IDENTITY(1,1),
   nombre VARCHAR(20) NOT NULL,
   apellidoPaterno VARCHAR(20) NOT NULL,
   apellidoMaterno VARCHAR(20) NOT NULL,
@@ -31,25 +34,53 @@ CREATE TABLE Empleado(
 );
 
 CREATE TABLE Usuario(
-  id_Usuario INT NOT NULL PRIMARY KEY IDENTITY(1,1),
-  id_Empleado INT NOT NULL,
+  idUsuario INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+  idEmpleado INT NOT NULL,
   usuario VARCHAR(30) NOT NULL,
   contraseña VARCHAR(30) NOT NULL,
-  FOREIGN KEY (id_Empleado) REFERENCES Empleado(id_Empleado)
+  FOREIGN KEY (idEmpleado) REFERENCES Empleado(idEmpleado)
 );
 
 CREATE TABLE Categoria(
-  id_Categoria INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+  idCategoria INT NOT NULL PRIMARY KEY IDENTITY(1,1),
   nombre VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE Producto(
-  id_Producto INT NOT NULL PRIMARY KEY IDENTITY(1,1),
-  id_Categoria INT NOT NULL,
+  idProducto INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+  idCategoria INT NOT NULL,
   nombre VARCHAR(50) NOT NULL,
   descripcion VARCHAR(500) NOT NULL,
   precio FLOAT NOT NULL,
-  FOREIGN KEY (id_Categoria) REFERENCES Categoria(id_Categoria)
+  FOREIGN KEY (idCategoria) REFERENCES Categoria(idCategoria)
+);
+
+CREATE TABLE Cliente(
+  id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+  razonSocial VARCHAR(50) NOT NULL,
+  cedulaIdentidad VARCHAR(15) NOT NULL,
+  celular VARCHAR(8) NOT NULL DEFAULT '0',
+);
+
+CREATE TABLE Venta(
+  id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+  idUsuario INT NOT NULL,
+  idCliente INT NOT NULL,
+  totalVenta DECIMAL NOT NULL,
+  fechaVenta DATE NOT NULL DEFAULT GETDATE(),
+  CONSTRAINT fk_Venta_Usuario FOREIGN KEY(idUsuario) REFERENCES Usuario(idUsuario),
+  CONSTRAINT fk_Venta_Cliente FOREIGN KEY(idCliente) REFERENCES Cliente(id)
+);
+
+CREATE TABLE VentaDetalle(
+  id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+  idVenta INT NOT NULL,
+  idProducto INT NOT NULL,
+  cantidad DECIMAL NOT NULL CHECK(cantidad > 0),
+  precioUnitario DECIMAL NOT NULL,
+  total DECIMAL NOT NULL,
+  CONSTRAINT fk_VentaDetalle_Venta FOREIGN KEY(idVenta) REFERENCES Venta(id),
+  CONSTRAINT fk_VentaDetalle_Producto FOREIGN KEY(idProducto) REFERENCES Producto(idProducto)
 );
 
 ALTER TABLE Empleado ADD usuarioRegistro VARCHAR(50) NOT NULL DEFAULT SUSER_NAME();
@@ -68,19 +99,67 @@ ALTER TABLE Producto ADD usuarioRegistro VARCHAR(50) NOT NULL DEFAULT SUSER_NAME
 ALTER TABLE Producto ADD fechaRegistro DATETIME NOT NULL DEFAULT GETDATE();
 ALTER TABLE Producto ADD estado SMALLINT NOT NULL DEFAULT 1;
 
+ALTER TABLE Cliente ADD usuarioRegistro VARCHAR(50) NOT NULL DEFAULT SUSER_NAME();
+ALTER TABLE Cliente ADD fechaRegistro DATETIME NOT NULL DEFAULT GETDATE();
+ALTER TABLE Cliente ADD estado SMALLINT NOT NULL DEFAULT 1;
+
+ALTER TABLE Venta ADD usuarioRegistro VARCHAR(50) NOT NULL DEFAULT SUSER_NAME();
+ALTER TABLE Venta ADD fechaRegistro DATETIME NOT NULL DEFAULT GETDATE();
+ALTER TABLE Venta ADD estado SMALLINT NOT NULL DEFAULT 1;
+
+ALTER TABLE VentaDetalle ADD usuarioRegistro VARCHAR(50) NOT NULL DEFAULT SUSER_NAME();
+ALTER TABLE VentaDetalle ADD fechaRegistro DATETIME NOT NULL DEFAULT GETDATE();
+ALTER TABLE VentaDetalle ADD estado SMALLINT NOT NULL DEFAULT 1;
+
 
 
 --Procedimientos Almacenados
 
 CREATE PROC paEmpleadoListar @parametro VARCHAR(50)
 AS
-  SELECT id_Empleado,nombre,apellidoPaterno,apellidoMaterno,telefono,direccion,cargo,salario
+  SELECT idEmpleado,nombre,apellidoPaterno,apellidoMaterno,telefono,direccion,cargo,salario
   FROM Empleado
   WHERE estado<>-1 AND nombre LIKE '%'+REPLACE(@parametro,' ','%')+'%';
 
 
 CREATE PROC paProductoListar @parametro VARCHAR(50)
 AS
-  SELECT id_Producto,id_Categoria,nombre,descripcion,precio
+  SELECT idProducto,idCategoria,nombre,descripcion,precio
   FROM Producto
   WHERE estado<>-1 AND nombre LIKE '%'+REPLACE(@parametro,' ','%')+'%';
+
+CREATE PROC paCategoriaListar @parametro VARCHAR(50)
+AS
+  SELECT *
+  FROM Categoria
+  WHERE estado<>-1 AND nombre LIKE '%'+REPLACE(@parametro,' ','%')+'%';
+
+CREATE PROC paClienteListar @parametro VARCHAR(50)
+AS 
+  SELECT *
+  FROM Cliente
+  WHERE estado<>-1 AND razonSocial LIKE '%'+REPLACE(@parametro,' ','%');
+
+CREATE PROC paVentaListar
+AS 
+  SELECT *
+  FROM Venta
+  WHERE estado<>-1;
+
+CREATE PROC paVentaBuscar @parametro INT
+AS 
+  SELECT *
+  FROM
+  WHERE estado<>-1 AND idCliente = @parametro;
+
+CREATE PROC paVentaDetalleListar
+AS
+SELECT * 
+FROM VentaDetalle
+WHERE estado<>-1;
+
+CREATE PROC paVentaDetalleBuscar @parametro INT
+AS 
+  SELECT *
+  FROM VentaDetalle
+  WHERE estado<>-1 AND idVenta = @parametro;
