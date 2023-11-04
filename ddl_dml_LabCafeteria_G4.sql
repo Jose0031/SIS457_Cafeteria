@@ -11,7 +11,7 @@ USE LabCafeteria_G4
 GO 
 CREATE USER usrcafeteria FOR LOGIN usrcafeteria
 GO 
-ALTER ROLE db_owmer ADD MEMBER usrcafeteria
+ALTER ROLE db_owner ADD MEMBER usrcafeteria
 GO
 
 DROP TABLE VentaDetalle;
@@ -149,7 +149,7 @@ AS
 CREATE PROC paVentaBuscar @parametro INT
 AS 
   SELECT *
-  FROM
+  FROM Venta
   WHERE estado<>-1 AND idCliente = @parametro;
 
 CREATE PROC paVentaDetalleListar

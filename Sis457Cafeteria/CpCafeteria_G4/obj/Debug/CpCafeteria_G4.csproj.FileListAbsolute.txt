@@ -1,0 +1,9 @@
+C:\ProyectoFinalSis457\SIS457_Cafeteria_G4\Sis457Cafeteria\CpCafeteria_G4\bin\Debug\CpCafeteria_G4.exe.config
+C:\ProyectoFinalSis457\SIS457_Cafeteria_G4\Sis457Cafeteria\CpCafeteria_G4\bin\Debug\CpCafeteria_G4.exe
+C:\ProyectoFinalSis457\SIS457_Cafeteria_G4\Sis457Cafeteria\CpCafeteria_G4\bin\Debug\CpCafeteria_G4.pdb
+C:\ProyectoFinalSis457\SIS457_Cafeteria_G4\Sis457Cafeteria\CpCafeteria_G4\obj\Debug\CpCafeteria_G4.csproj.AssemblyReference.cache
+C:\ProyectoFinalSis457\SIS457_Cafeteria_G4\Sis457Cafeteria\CpCafeteria_G4\obj\Debug\CpCafeteria_G4.Properties.Resources.resources
+C:\ProyectoFinalSis457\SIS457_Cafeteria_G4\Sis457Cafeteria\CpCafeteria_G4\obj\Debug\CpCafeteria_G4.csproj.GenerateResource.cache
+C:\ProyectoFinalSis457\SIS457_Cafeteria_G4\Sis457Cafeteria\CpCafeteria_G4\obj\Debug\CpCafeteria_G4.csproj.CoreCompileInputs.cache
+C:\ProyectoFinalSis457\SIS457_Cafeteria_G4\Sis457Cafeteria\CpCafeteria_G4\obj\Debug\CpCafeteria_G4.exe
+C:\ProyectoFinalSis457\SIS457_Cafeteria_G4\Sis457Cafeteria\CpCafeteria_G4\obj\Debug\CpCafeteria_G4.pdb
